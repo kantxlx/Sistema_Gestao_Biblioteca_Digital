@@ -63,14 +63,7 @@ Os dados são carregados ao iniciar o sistema, e ao fazer modificações, as inf
 ## Exemplo de Uso
 
 ### Menu Textual:
-Ao rodar o sistema em modo textual, o usuário será apresentado ao menu com opções como:
-1. Cadastrar livro
-2. Cadastrar usuário
-3. Emprestar livro
-4. Devolver livro
-5. Ver estatísticas
-6. Sair
-
+Ao rodar o sistema em modo textual, o usuário será apresentado ao menu com opções.
 **Exemplo de execução do menu:**
 
 ```
