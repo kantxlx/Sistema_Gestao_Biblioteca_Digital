@@ -64,6 +64,7 @@ Os dados são carregados ao iniciar o sistema, e ao fazer modificações, as inf
 
 ### Menu Textual:
 Ao rodar o sistema em modo textual, o usuário será apresentado ao menu com opções.
+
 **Exemplo de execução do menu:**
 
 ```
