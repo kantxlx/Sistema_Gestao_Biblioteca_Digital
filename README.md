@@ -144,7 +144,7 @@ Este sistema de gestão de biblioteca digital foi desenvolvido para gerenciar li
 
 1. Clone o repositório:
    ```
-   git clone https://github.com/https://github.com/kantxlx/Sistema_Gestao_Biblioteca_Digital.git
+   git clone https://github.com/kantxlx/Sistema_Gestao_Biblioteca_Digital.git
    ```
 
 2. Instale as dependências necessárias:
