@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Livros</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <div class="menu-toggle" onclick="toggleMenu()">☰</div>
+    <header>Biblioteca Digital</header>
+    <nav id="menu">
+        <a href="/">Início</a>
+        <a href="/livros">Livros</a>
+        <a href="/usuarios">Usuários</a>
+        <a href="/emprestimos">Empréstimos</a>
+        <a href="/estatisticas">Estatísticas</a>
+    </nav>
+    <div class="container">
+        <h2>Lista de Livros</h2>
+
+        <!-- Formulário de busca -->
+        <form method="GET" action="/livros">
+            <input type="text" name="busca" placeholder="Buscar por título, autor ou categoria" value="{{ request.args.get('busca', '') }}">
+            <button type="submit">Buscar</button>
+        </form>
+
+        <!-- Exibição dos livros -->
+        <table>
+            <thead>
+                <tr>
+                    <th>Título</th>
+                    <th>Autor</th>
+                    <th>Ano</th>
+                    <th>ISBN</th>
+                    <th>Categoria</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for livro in livros %}
+                <tr>
+                    <td>{{ livro.titulo }}</td>
+                    <td>{{ livro.autor }}</td>
+                    <td>{{ livro.ano }}</td>
+                    <td>{{ livro.isbn }}</td>
+                    <td>{{ livro.categoria }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        function toggleMenu() {
+            document.getElementById("menu").classList.toggle("active");
+        }
+    </script>
+    
+    <footer>
+        <p>&copy; 2024 Biblioteca Digital</p>
+    </footer>
+</body>
+</html>

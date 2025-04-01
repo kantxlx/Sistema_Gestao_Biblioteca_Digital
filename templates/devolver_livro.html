@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Devolver Livro</title>
+    <link rel="stylesheet" href="static/styles2.css">
+</head>
+<body>
+    <div class="menu-toggle" onclick="toggleMenu()">☰</div>
+    <header>Biblioteca Digital</header>
+    <nav id="menu">
+        <a href="/">Início</a>
+        <a href="/livros">Livros</a>
+        <a href="/usuarios">Usuários</a>
+        <a href="/emprestimos">Empréstimos</a>
+        <a href="/estatisticas">Estatísticas</a>
+    </nav>
+
+<div class="container">
+    <h2>Devolver Livro</h2>
+
+    <form id="devolver-form" method="POST">
+        <label for="isbn">ISBN do Livro</label>
+        <input type="text" id="isbn" name="isbn" required>
+
+        <label for="id_usuario">ID do Usuário</label>
+        <input type="text" id="id_usuario" name="id_usuario" required>
+
+        <button type="submit">Devolver</button>
+    </form>
+
+    <div id="erro" style="color: red; margin-top: 10px;"></div>
+</div>
+
+<footer>
+    <p>&copy; 2025 Sistema de Gestão de Biblioteca</p>
+</footer>
+
+<script>
+    const form = document.getElementById('devolver-form');
+    form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        
+        const isbn = document.getElementById('isbn').value;
+        const id_usuario = document.getElementById('id_usuario').value;
+        const erroDiv = document.getElementById('erro');
+
+        // Limpa mensagens de erro anteriores
+        erroDiv.textContent = '';
+
+        const response = await fetch('/devolver_livro', {
+            method: 'POST',
+            body: new URLSearchParams({
+                'isbn': isbn,
+                'id_usuario': id_usuario
+            }),
+        });
+
+        const data = await response.text();
+
+        if (response.ok) {
+            erroDiv.style.color = 'green';
+            erroDiv.textContent = 'Livro devolvido com sucesso!';
+            setTimeout(() => {
+                window.location.href = '/emprestimos'; // Redireciona após 2 segundos
+            }, 2000);
+        } else {
+            erroDiv.style.color = 'red';
+            erroDiv.textContent = data;  // Exibe a mensagem de erro retornada pelo back
+        }
+    });
+</script>
+
+<script>
+    function toggleMenu() {
+        document.getElementById("menu").classList.toggle("active");
+    }
+</script>
+
+</body>
+</html>

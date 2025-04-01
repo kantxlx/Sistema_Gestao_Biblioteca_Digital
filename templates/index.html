@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biblioteca Digital</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <div class="menu-toggle" onclick="toggleMenu()">☰</div>
+    <header>Biblioteca Digital</header>
+    <nav id="menu">
+        <a href="/">Início</a>
+        <a href="/livros">Livros</a>
+        <a href="/usuarios">Usuários</a>
+        <a href="/emprestimos">Empréstimos</a>
+        <a href="/estatisticas">Estatísticas</a>
+        <a href="/cadastrar_livro">Cadastrar Livro</a>
+        <a href="/cadastrar_usuario">Cadastrar Usuário</a>
+        <a href="/emprestar_livro">Emprestar Livro</a>
+        <a href="/devolver_livro">Devolução</a>
+    </nav>
+
+    <div class="container">
+        <h2>Bem-vindo à Biblioteca Digital</h2>
+        <p>Gerencie livros, usuários e empréstimos de maneira eficiente.</p>
+
+        <h3>Livros Disponíveis</h3>
+
+        <!-- Formulário de busca -->
+        <form action="/" method="get">
+            <input type="text" name="busca" placeholder="Buscar por título, autor ou categoria" value="{{ request.args.get('busca', '') }}">
+            <button type="submit">Buscar</button>
+        </form>
+
+        <!-- Listagem de livros -->
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Título</th>
+                    <th>Autor</th>
+                    <th>Ano</th>
+                    <th>ISBN</th>
+                    <th>Categoria</th>
+                    <th>Status</th>
+                    <th>Ação</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for livro in livros %}
+                <tr>
+                    <td>{{ livro.titulo }}</td>
+                    <td>{{ livro.autor }}</td>
+                    <td>{{ livro.ano }}</td>
+                    <td>{{ livro.isbn }}</td>
+                    <td>{{ livro.categoria }}</td>
+                    <td>
+                        {% if livro.isbn in emprestimos %}
+                            📕 Indisponível
+                        {% else %}
+                            📗 Disponível
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if livro.isbn in emprestimos %}
+                            <button disabled>Livro Indisponível</button>
+                        {% else %}
+                            <form action="/emprestar_livro" method="post">
+                                <input type="hidden" name="isbn" value="{{ livro.isbn }}">
+                                <input type="text" name="id_usuario" placeholder="ID do Usuário" required>
+                                <button type="submit">Emprestar</button>
+                            </form>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="7">Nenhum livro encontrado.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        function toggleMenu() {
+            document.getElementById("menu").classList.toggle("active");
+        }
+    </script>
+
+    <footer>&copy; 2024 Biblioteca Digital</footer>
+</body>
+</html>

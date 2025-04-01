@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estatísticas</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <div class="menu-toggle" onclick="toggleMenu()">☰</div>
+    <header>Biblioteca Digital</header>
+    <nav id="menu">
+        <a href="/">Início</a>
+        <a href="/livros">Livros</a>
+        <a href="/usuarios">Usuários</a>
+        <a href="/emprestimos">Empréstimos</a>
+        <a href="/estatisticas">Estatísticas</a>
+    </nav>
+
+    <div class="container">
+        <h2>Estatísticas</h2>
+
+        <div class="estatisticas-botoes">
+            <button onclick="mostrarEstatistica('livros_categoria')">📚 Livros por Categoria</button>
+            <button onclick="mostrarEstatistica('emprestimos_tipo')">👥 Empréstimos por Tipo</button>
+            <button onclick="mostrarEstatistica('mais_emprestados')">🔥 Top 5 Mais Emprestados</button>
+        </div>
+
+        <div id="loading">Carregando estatísticas...</div>
+        <div id="erro"></div>
+
+        <div id="livros_categoria" class="estatisticas-section">
+            <h3>Livros por Categoria</h3>
+            <ul id="lista-livros-categoria"></ul>
+        </div>
+
+        <div id="emprestimos_tipo" class="estatisticas-section">
+            <h3>Empréstimos por Tipo de Usuário</h3>
+            <ul id="lista-emprestimos-tipo"></ul>
+        </div>
+
+        <div id="mais_emprestados" class="estatisticas-section">
+            <h3>Top 5 Livros Mais Emprestados</h3>
+            <ul id="lista-mais-emprestados"></ul>
+        </div>
+    </div>
+
+    <script>
+        function toggleMenu() {
+            document.getElementById("menu").classList.toggle("active");
+        }
+
+        async function carregarEstatisticas() {
+            try {
+                const response = await fetch('/estatisticas/dados'); 
+                const dados = await response.json();
+
+                document.getElementById("loading").style.display = "none";
+
+                const listaLivros = document.getElementById("lista-livros-categoria");
+                listaLivros.innerHTML = "";
+                if (Object.keys(dados.livros_por_categoria).length === 0) {
+                    listaLivros.innerHTML = "<li>Sem dados disponíveis.</li>";
+                } else {
+                    for (const [categoria, qtd] of Object.entries(dados.livros_por_categoria)) {
+                        listaLivros.innerHTML += `<li>${categoria}: <strong>${qtd}</strong></li>`;
+                    }
+                }
+
+                const listaEmprestimos = document.getElementById("lista-emprestimos-tipo");
+                listaEmprestimos.innerHTML = "";
+                if (Object.keys(dados.emprestimos_por_tipo).length === 0) {
+                    listaEmprestimos.innerHTML = "<li>Nenhum empréstimo registrado.</li>";
+                } else {
+                    for (const [tipo, qtd] of Object.entries(dados.emprestimos_por_tipo)) {
+                        listaEmprestimos.innerHTML += `<li>${tipo}: <strong>${qtd}</strong></li>`;
+                    }
+                }
+
+                const listaTopLivros = document.getElementById("lista-mais-emprestados");
+                listaTopLivros.innerHTML = "";
+                if (dados.livros_mais_emprestados.length === 0) {
+                    listaTopLivros.innerHTML = "<li>Nenhum livro emprestado ainda.</li>";
+                } else {
+                    dados.livros_mais_emprestados.forEach(livro => {
+                        listaTopLivros.innerHTML += `<li>📖 ${livro.titulo}: <strong>${livro.quantidade} empréstimos</strong></li>`;
+                    });
+                }
+
+            } catch (error) {
+                console.error("Erro ao carregar estatísticas:", error);
+                document.getElementById("erro").textContent = "Falha ao carregar as estatísticas.";
+                document.getElementById("loading").style.display = "none";
+            }
+        }
+
+        function mostrarEstatistica(id) {
+            document.querySelectorAll(".estatisticas-section").forEach(secao => {
+                secao.style.display = "none";
+            });
+            document.getElementById(id).style.display = "block";
+        }
+
+        carregarEstatisticas();
+    </script>
+
+    <footer>&copy; 2024 Biblioteca Digital</footer>
+</body>
+</html>

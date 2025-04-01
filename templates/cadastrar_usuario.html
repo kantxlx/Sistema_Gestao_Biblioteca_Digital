@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biblioteca Digital</title>
+    <link rel="stylesheet" href="/static/styles2.css">
+</head>
+<body>
+    <div class="menu-toggle" onclick="toggleMenu()">☰</div>
+    <header>Biblioteca Digital</header>
+    <nav id="menu">
+        <a href="/">Início</a>
+        <a href="/livros">Livros</a>
+        <a href="/usuarios">Usuários</a>
+        <a href="/emprestimos">Empréstimos</a>
+        <a href="/estatisticas">Estatísticas</a>
+    </nav>
+    <div class="container">
+        <h2>Cadastrar Usuário</h2>
+        <form id="cadastrar-usuario-form" method="POST">
+            <label for="id">ID do Usuário: <span style="color: gray; font-size: 0.9em;">(Utilize a matrícula da universidade)</span></label>
+            <input type="text" id="id" name="id" required>
+            
+            <label for="nome">Nome:</label>
+            <input type="text" id="nome" name="nome" required>
+            
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+            
+            <label for="tipo">Tipo:</label>
+            <select id="tipo" name="tipo" required>
+                <option value="aluno">Aluno</option>
+                <option value="professor">Professor</option>
+                <option value="visitante">Visitante</option>
+            </select>
+            
+            <button type="submit">Cadastrar Usuário</button>
+        </form>
+        <div id="erro" style="color: red; margin-top: 10px;"></div>
+    </div>
+
+    <footer>&copy; 2024 Biblioteca Digital</footer>
+
+    <script>
+        function toggleMenu() {
+            document.getElementById("menu").classList.toggle("active");
+        }
+    </script>
+
+    <script>
+        const form = document.getElementById('cadastrar-usuario-form');
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            
+            const id = document.getElementById('id').value;
+            const nome = document.getElementById('nome').value;
+            const email = document.getElementById('email').value;
+            const tipo = document.getElementById('tipo').value;
+            const erroDiv = document.getElementById('erro');
+
+            erroDiv.textContent = '';
+
+            const response = await fetch('/cadastrar_usuario', {
+                method: 'POST',
+                body: new URLSearchParams({
+                    'id': id,
+                    'nome': nome,
+                    'email': email,
+                    'tipo': tipo
+                }),
+            });
+
+            const data = await response.text();
+
+            if (response.ok) {
+                erroDiv.style.color = 'green';
+                erroDiv.textContent = 'Usuário cadastrado com sucesso!';
+                setTimeout(() => {
+                    window.location.href = '/usuarios';
+                }, 2000);
+            } else {
+                erroDiv.style.color = 'red';
+                erroDiv.textContent = data;
+            }
+        });
+    </script>
+</body>
+</html>

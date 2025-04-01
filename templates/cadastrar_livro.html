@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastrar Livro</title>
+    <link rel="stylesheet" href="/static/styles2.css">
+</head>
+<body>
+    <div class="menu-toggle" onclick="toggleMenu()">☰</div>
+    <header>Biblioteca Digital</header>
+    <nav id="menu">
+        <a href="/">Início</a>
+        <a href="/livros">Livros</a>
+        <a href="/usuarios">Usuários</a>
+        <a href="/emprestimos">Empréstimos</a>
+        <a href="/estatisticas">Estatísticas</a>
+    </nav>
+
+    <div class="container">
+        <h2>Cadastrar Livro</h2>
+        
+        <form id="cadastrar-form" method="POST">
+            <label for="titulo">Título:</label>
+            <input type="text" id="titulo" name="titulo" required>
+
+            <label for="autor">Autor:</label>
+            <input type="text" id="autor" name="autor" required>
+
+            <label for="ano">Ano:</label>
+            <input type="text" id="ano" name="ano" required>
+
+            <label for="isbn">ISBN:</label>
+            <input type="text" id="isbn" name="isbn" required>
+
+            <label for="categoria">Categoria:</label>
+            <input type="text" id="categoria" name="categoria" required>
+
+            <button type="submit">Cadastrar Livro</button>
+        </form>
+
+        <div id="erro" style="color: red; margin-top: 10px;"></div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Biblioteca Digital</p>
+    </footer>
+
+    <script>
+        const form = document.getElementById('cadastrar-form');
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            
+            const formData = new URLSearchParams(new FormData(form));
+            const erroDiv = document.getElementById('erro');
+            erroDiv.textContent = '';
+            
+            const response = await fetch('/cadastrar_livro', {
+                method: 'POST',
+                body: formData,
+            });
+            
+            const data = await response.text();
+            
+            if (response.ok) {
+                erroDiv.style.color = 'green';
+                erroDiv.textContent = 'Livro cadastrado com sucesso!';
+                setTimeout(() => {
+                    window.location.href = '/livros';
+                }, 2000);
+            } else {
+                erroDiv.style.color = 'red';
+                erroDiv.textContent = data;
+            }
+        });
+    </script>
+
+    <script>
+        function toggleMenu() {
+            document.getElementById("menu").classList.toggle("active");
+        }
+    </script>
+</body>
+</html>
